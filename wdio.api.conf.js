@@ -4,7 +4,17 @@ exports.config = {
   specs: ['./features/api/**/*.feature'],
   exclude: [],
   // API tests ไม่ใช้ browser
-  capabilities: [],
+  capabilities: [{
+  browserName: 'chrome',
+  'goog:chromeOptions': {
+    args: [
+      '--headless=new',
+      '--no-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage'
+    ]
+  }
+}],
   logLevel: 'warn',
   bail: 0,
   connectionRetryTimeout: 120000,
