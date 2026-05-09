@@ -2,12 +2,12 @@
   "name": "quiz-qa",
   "version": "1.0.0",
   "scripts": {
-    "test:ui": "wdio run wdio.conf.js --spec 'features/ui/**/*.feature'",
-    "test:ui:headed": "wdio run wdio.conf.js --spec 'features/ui/**/*.feature' --headed",
-    "test:api": "wdio run wdio.conf.js --spec 'features/api/**/*.feature'",
-    "test": "wdio run wdio.conf.js --spec 'features/**/*.feature'",
-    "report": "node generate-report.js"
-  },
+  "test:ui": "wdio run wdio.ui.conf.js",
+  "test:ui:headed": "wdio run wdio.ui.conf.js --headed",
+  "test:api": "wdio run wdio.api.conf.js",
+  "test": "npm run test:ui && npm run test:api",
+  "report": "node generate-report.js"
+},
   "dependencies": {
     "axios": "^1.6.0"
   },

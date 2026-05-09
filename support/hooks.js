@@ -3,12 +3,14 @@ const { Before, After } = require('@wdio/cucumber-framework');
 // Shared state across steps
 global.scenarioContext = {};
 
-Before(async function () {
+Before({ tags: '@ui' }, async function () {
 
   global.scenarioContext = {};
 
   // Open application
-  await browser.url('https://qa-practice.razvanvancea.ro/auth_ecommerce.html');
+  await browser.url(
+    'https://qa-practice.razvanvancea.ro/auth_ecommerce.html'
+  );
 
   // Wait for page ready
   const emailInput = await $('#email');
@@ -42,7 +44,7 @@ Before(async function () {
 
 });
 
-After(async function (scenario) {
+After({ tags: '@ui' }, async function (scenario) {
 
   if (scenario.result.status === 'FAILED') {
 
