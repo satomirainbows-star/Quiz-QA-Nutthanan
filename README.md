@@ -1,80 +1,183 @@
-# Quiz QA — Cucumber Automation Project
+# Quiz QA — Automation Testing Project
 
-โปรเจกต์ทดสอบอัตโนมัติสำหรับ Website และ API ด้วย **Cucumber + WebdriverIO** (UI) และ **Axios** (API)
+โปรเจกต์ทดสอบอัตโนมัติสำหรับ Web UI และ REST API โดยใช้แนวทาง Behavior-Driven Development (BDD) ด้วย Cucumber
 
----
+รองรับทั้ง:
 
-## 📋 สารบัญ
-
-1. [สิ่งที่ต้องติดตั้งก่อนใช้งาน](#1-สิ่งที่ต้องติดตั้งก่อนใช้งาน)
-2. [ดาวน์โหลดและติดตั้งโปรเจกต์](#2-ดาวน์โหลดและติดตั้งโปรเจกต์)
-3. [เตรียม API Server (สำหรับ API Tests)](#3-เตรียม-api-server-สำหรับ-api-tests)
-4. [รัน Tests](#4-รัน-tests)
-5. [ดู HTML Report](#5-ดู-html-report)
-6. [โครงสร้างโปรเจกต์](#6-โครงสร้างโปรเจกต์)
-7. [Test Scenarios ทั้งหมด](#7-test-scenarios-ทั้งหมด)
-8. [GitHub Actions (CI/CD)](#8-github-actions-cicd)
+* ✅ UI Automation Testing
+* ✅ API Automation Testing
+* ✅ HTML Reporting
+* ✅ GitHub Actions CI/CD
+* ✅ Docker-based API Integration Testing
 
 ---
 
-## 1. สิ่งที่ต้องติดตั้งก่อนใช้งาน
+# 🚀 Technologies Used
 
-ตรวจสอบให้แน่ใจว่าติดตั้งครบทุกอย่างก่อนเริ่มต้น
-
-| เครื่องมือ | Version | ลิงก์ดาวน์โหลด |
-|-----------|---------|----------------|
-| Node.js | >= 18 | https://nodejs.org |
-| npm | >= 9 | ติดตั้งมาพร้อมกับ Node.js |
-| Google Chrome | Latest | https://www.google.com/chrome |
-| Docker Desktop | Latest | https://www.docker.com/products/docker-desktop |
-
-> **วิธีตรวจสอบว่าติดตั้งแล้วหรือยัง** เปิด Terminal แล้วพิมพ์คำสั่งเหล่านี้
-> ```bash
-> node -v      # ควรแสดง v18.x.x หรือสูงกว่า
-> npm -v       # ควรแสดง 9.x.x หรือสูงกว่า
-> docker -v    # ควรแสดง Docker version x.x.x
-> ```
+| Layer           | Technology                    |
+| --------------- | ----------------------------- |
+| UI Automation   | WebdriverIO                   |
+| API Automation  | Axios                         |
+| BDD Framework   | Cucumber                      |
+| Assertions      | Node.js Assert                |
+| Reporting       | cucumberjs-json + HTML Report |
+| CI/CD           | GitHub Actions                |
+| API Environment | Docker                        |
+| Runtime         | Node.js                       |
 
 ---
 
-## 2. ดาวน์โหลดและติดตั้งโปรเจกต์
+# 🏗 Project Architecture
 
-**ขั้นตอนที่ 1** — Clone โปรเจกต์จาก GitHub มาไว้ที่เครื่อง
+โปรเจกต์นี้ออกแบบให้แยก UI Tests และ API Tests ออกจากกันอย่างชัดเจน เพื่อให้:
+
+* ลด flaky tests
+* รันบน CI/CD ได้เสถียร
+* ดูแลรักษาง่าย
+* scale automation ได้ในอนาคต
+
+```text
+UI Layer
+ └── WebdriverIO + Chrome Headless
+
+API Layer
+ └── Axios HTTP Client
+
+BDD Layer
+ └── Cucumber Feature Files
+
+Execution Layer
+ └── WDIO Runner
+
+Reporting Layer
+ └── JSON Report → HTML Report
+
+CI/CD Layer
+ └── GitHub Actions
+```
+
+---
+
+# ⚙️ CI Stability Improvements
+
+โปรเจกต์นี้มีการปรับแต่งสำหรับ GitHub Actions และ Linux runner โดยเฉพาะ
+
+### ✔ Chrome Headless Mode
+
+ใช้ Chrome แบบ headless เพื่อลด resource usage และเพิ่มความเร็วในการรัน
+
+### ✔ Dedicated Config Separation
+
+แยก config ระหว่าง:
+
+* `wdio.ui.conf.js`
+* `wdio.api.conf.js`
+
+ช่วยลดปัญหา browser capability conflict
+
+### ✔ Worker Limitation
+
+จำกัดจำนวน workers เพื่อป้องกัน flaky tests บน shared CI runner
+
+```js
+maxInstances: 1
+workers: 1
+```
+
+### ✔ Automatic Screenshot Capture
+
+เมื่อ UI test fail ระบบจะ capture screenshot อัตโนมัติ
+
+```text
+reports/error-<timestamp>.png
+```
+
+### ✔ Dockerized API Testing
+
+API tests ใช้ Docker container เพื่อให้ environment เหมือนกันทุกครั้ง
+
+---
+
+# 📦 Prerequisites
+
+กรุณาติดตั้งเครื่องมือดังต่อไปนี้ก่อนเริ่มใช้งาน
+
+| Tool           | Required Version |
+| -------------- | ---------------- |
+| Node.js        | >= 18            |
+| npm            | >= 9             |
+| Google Chrome  | Latest           |
+| Docker Desktop | Latest           |
+
+---
+
+# 🔍 Verify Installation
+
+ตรวจสอบว่า environment พร้อมใช้งาน
+
+```bash
+node -v
+npm -v
+docker -v
+```
+
+ตัวอย่าง:
+
+```bash
+v20.x.x
+9.x.x
+Docker version xx.x.x
+```
+
+---
+
+# 📥 Installation
+
+## 1. Clone Repository
 
 ```bash
 git clone https://github.com/<your-username>/quiz-qa.git
 cd quiz-qa
 ```
 
-**ขั้นตอนที่ 2** — ติดตั้ง dependencies ทั้งหมด (ทำครั้งเดียวตอนแรก)
+---
+
+## 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-> รอสักครู่จนกว่าจะติดตั้งเสร็จ จะเห็นข้อความ `added xxx packages`
+---
+
+# 🐳 API Server Setup
+
+API tests จำเป็นต้องใช้ Docker container
+
+## Start API Server
+
+```bash
+docker run -d --rm \
+--name qa-practice-api \
+-p 8887:8081 \
+rvancea/qa-practice-api:latest
+```
 
 ---
 
-## 3. เตรียม API Server (สำหรับ API Tests)
+## Verify API Server
 
-> ⚠️ **ต้องทำทุกครั้งก่อนรัน API Tests** — ถ้ารันแค่ UI Tests ข้ามขั้นตอนนี้ได้
+เปิด browser ไปที่:
 
-**ขั้นตอนที่ 1** — เปิด Docker Desktop ให้รันอยู่ก่อน จากนั้นรันคำสั่งนี้เพื่อเริ่ม API Server
-
-```bash
-docker run -d --rm --name qa-practice-api -p 8887:8081 rvancea/qa-practice-api:latest
-```
-
-**ขั้นตอนที่ 2** — ตรวจสอบว่า API พร้อมใช้งานแล้ว โดยเปิด Browser ไปที่
-
-```
+```text
 http://localhost:8887/swagger-ui.html
 ```
 
-> ถ้าเห็นหน้า Swagger UI แสดงว่า API พร้อมแล้ว ✅
+หากเห็น Swagger UI แสดงว่า API พร้อมใช้งาน
 
-**เมื่อทดสอบเสร็จแล้ว** — หยุด API Server ด้วยคำสั่ง
+---
+
+## Stop API Server
 
 ```bash
 docker stop qa-practice-api
@@ -82,205 +185,290 @@ docker stop qa-practice-api
 
 ---
 
-## 4. รัน Tests
+# ▶ Running Tests
 
-### 4.1 รันทั้งหมด (UI + API) — แนะนำสำหรับการทดสอบครบชุด
-
-> ต้องเริ่ม API Server ก่อน (ดูขั้นตอนที่ 3)
+# Run All Tests
 
 ```bash
 npm test
 ```
 
+รันทั้ง:
+
+* UI Tests
+* API Tests
+
 ---
 
-### 4.2 รันเฉพาะ UI Tests
-
-ทดสอบการทำงานของ Website อย่างเดียว ไม่ต้องเริ่ม Docker
+# Run UI Tests Only
 
 ```bash
 npm run test:ui
 ```
 
-> โดยค่าเริ่มต้น Chrome จะรันแบบ **Headless** (ไม่เปิดหน้าต่าง Browser) เพื่อความเร็ว
+ใช้ Chrome Headless mode โดยอัตโนมัติ
 
 ---
 
-### 4.3 รัน UI Tests แบบเปิดหน้าต่าง Chrome (Headed Mode)
+# Run UI Tests (Headed Mode)
 
-ใช้เมื่อต้องการ **ดูการทำงานของ Test แบบ Real-time** บนหน้าจอ เหมาะสำหรับ Debug หรือ Demo
+สำหรับ debug หรือ demo
 
 ```bash
 npm run test:ui:headed
 ```
 
-หรือระบุ `--headed` flag โดยตรง
+หรือ
 
 ```bash
-npx wdio run wdio.conf.js --spec 'features/ui/**/*.feature' --headed
+npx wdio run wdio.ui.conf.js --headed
 ```
-
-> **หมายเหตุ:** Headed mode จะเปิดหน้าต่าง Chrome ให้เห็นการคลิก กรอกข้อมูล และนำทางแบบ Real-time
-> ไม่แนะนำให้ใช้ใน CI/CD เพราะช้ากว่า Headless
 
 ---
 
-### 4.4 รันเฉพาะ API Tests
-
-ทดสอบ API อย่างเดียว ต้องเริ่ม Docker ก่อน (ดูขั้นตอนที่ 3)
+# Run API Tests Only
 
 ```bash
 npm run test:api
 ```
 
+> ต้อง start Docker API server ก่อน
+
 ---
 
-### 4.5 รันเฉพาะบาง Step หรือบาง Tag
+# 🎯 Run By Tags
 
-เลือกรันเฉพาะ Test ที่ต้องการโดยใช้ Tag
+รองรับการรันแบบ selective execution
+
+## Run Login Tests
 
 ```bash
-# รันเฉพาะ Step 1 (Login)
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@step1"
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step1"
+```
 
-# รันเฉพาะ Step 2 (เลือกสินค้า)
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@step2"
+## Run Cart Tests
 
-# รันเฉพาะ Step 3 (กรอกข้อมูล Shipping)
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@step3"
+```bash
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step2"
+```
 
-# รันเฉพาะ Step 4 (ตรวจสอบ Address)
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@step4"
+## Run Shipping Tests
 
-# รันเฉพาะ Positive cases ทั้งหมด
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@positive"
+```bash
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step3"
+```
 
-# รันเฉพาะ Negative cases ทั้งหมด
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@negative"
+## Run Validation Tests
 
-# รันเฉพาะ API tests ทั้งหมด
-npx wdio run wdio.conf.js --cucumberOpts.tagExpression="@api"
+```bash
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step4"
+```
+
+## Run Positive Tests
+
+```bash
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@positive"
+```
+
+## Run Negative Tests
+
+```bash
+npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@negative"
+```
+
+## Run API Tests By Tag
+
+```bash
+npx wdio run wdio.api.conf.js --cucumberOpts.tagExpression="@api"
 ```
 
 ---
 
-## 5. ดู HTML Report
+# 📊 HTML Reporting
 
-หลังจากรัน Tests เสร็จแล้ว สร้าง HTML Report ด้วยคำสั่ง
+หลังจากรัน tests เสร็จ:
 
 ```bash
 npm run report
 ```
 
-ไฟล์ report จะถูกสร้างใน folder `reports/` โดยตั้งชื่อตาม **วันที่** และ **ครั้งที่รัน** อัตโนมัติ
+---
 
-```
+# 📁 Report Structure
+
+ระบบจะสร้าง report แยกตาม:
+
+* วันที่
+* รอบการรัน
+
+ตัวอย่าง:
+
+```text
 reports/
-├── 2026-05-09_run-01/          ← JSON data จากการรันครั้งที่ 1
-├── 2026-05-09_run-01_report/   ← HTML report ครั้งที่ 1
-│   └── index.html              ← ← เปิดไฟล์นี้ด้วย Browser
-├── 2026-05-09_run-02/
-├── 2026-05-09_run-02_report/
+├── 2026-05-09_run-01/
+├── 2026-05-09_run-01_report/
 │   └── index.html
+├── 2026-05-09_run-02/
 └── ...
 ```
 
-เปิด `index.html` ใน folder `_report` ด้วย Browser เพื่อดูผลลัพธ์
+---
 
-> Report จะแสดงสรุปผลการทดสอบทั้งหมด พร้อมรายละเอียดแต่ละ Scenario ว่า ✅ Pass หรือ ❌ Fail
+# 🖼 Failure Screenshots
+
+เมื่อ UI tests fail:
+
+```text
+reports/error-<timestamp>.png
+```
+
+จะถูกสร้างอัตโนมัติ
 
 ---
 
-## 6. โครงสร้างโปรเจกต์
+# 📂 Project Structure
 
-```
+```text
 quiz-qa/
 ├── .github/
 │   └── workflows/
-│       └── qa-tests.yml        # GitHub Actions CI/CD pipeline
+│       └── qa-tests.yml
+│
 ├── features/
 │   ├── ui/
-│   │   └── shop.feature        # UI test scenarios (Step 1–4)
+│   │   └── shop.feature
 │   └── api/
-│       └── employees.feature   # API test scenarios (POST & GET)
+│       └── employees.feature
+│
 ├── step-definitions/
-│   ├── ui.steps.js             # โค้ดขั้นตอนการทดสอบ UI
-│   └── api.steps.js            # โค้ดขั้นตอนการทดสอบ API
+│   ├── ui.steps.js
+│   └── api.steps.js
+│
 ├── support/
-│   ├── selectors.js            # CSS selectors สำหรับระบุ Element บนหน้าเว็บ
-│   └── hooks.js                # Setup และ Teardown ก่อน/หลังแต่ละ Scenario
-├── reports/                    # ผลลัพธ์ JSON และ HTML report
-├── generate-report.js          # Script สร้าง HTML report
-├── wdio.conf.js                # WebdriverIO configuration
-└── package.json                # Dependencies และ npm scripts
+│   ├── hooks.js
+│   └── selectors.js
+│
+├── reports/
+│
+├── generate-report.js
+├── wdio.ui.conf.js
+├── wdio.api.conf.js
+├── package.json
+└── README.md
 ```
 
-**อธิบายแต่ละส่วน:**
+---
 
-| โฟลเดอร์/ไฟล์ | หน้าที่ |
-|--------------|--------|
-| `features/` | เขียน Test Scenarios ด้วยภาษา Gherkin (Given/When/Then) |
-| `step-definitions/` | โค้ด JavaScript ที่แปลง Gherkin เป็นการกระทำจริง |
-| `support/selectors.js` | เก็บ CSS Selector ของ Element ต่าง ๆ บนหน้าเว็บ |
-| `support/hooks.js` | รันโค้ด Setup/Teardown อัตโนมัติก่อน-หลังแต่ละ Test |
-| `wdio.conf.js` | ตั้งค่า Browser, Framework, Reporter |
-| `reports/` | เก็บผลลัพธ์การทดสอบในรูปแบบ JSON และ HTML |
+# 🧪 Test Coverage
+
+# UI Test Coverage
+
+เว็บไซต์:
+
+```text
+https://qa-practice.razvanvancea.ro/auth_ecommerce.html
+```
+
+| Area                  | Coverage |
+| --------------------- | -------- |
+| Login Validation      | ✅        |
+| Product Selection     | ✅        |
+| Cart Total Validation | ✅        |
+| Checkout Navigation   | ✅        |
+| Shipping Validation   | ✅        |
+| Address Validation    | ✅        |
 
 ---
 
-## 7. Test Scenarios ทั้งหมด
+# API Test Coverage
 
-### UI Tests — https://qa-practice.razvanvancea.ro/auth_ecommerce.html
+API:
 
-| Tag | Scenario | ประเภท |
-|-----|----------|--------|
-| `@step1` | Login ด้วย Email และ Password ที่ถูกต้อง | ✅ Positive |
-| `@step1` | Login ด้วย Email และ Password ที่ผิด | ❌ Negative |
-| `@step2` | เลือกสินค้า Dior ×2 และ Gucci ×3 พร้อมตรวจสอบราคารวม | ✅ Positive |
-| `@step2` | กดปุ่ม Proceed to Checkout | ✅ Positive |
-| `@step3` | กรอกข้อมูล Shipping ครบทุก Field แล้ว Submit | ✅ Positive |
-| `@step3` | กรอกข้อมูล Shipping ไม่ครบแล้ว Submit | ❌ Negative |
-| `@step4` | ตรวจสอบข้อความยืนยันคำสั่งซื้อแสดงในรูปแบบ `Street, City - Country` | ✅ Positive |
+```text
+http://localhost:8887/swagger-ui.html
+```
 
-### API Tests — http://localhost:8887/swagger-ui.html
-
-| Tag | Endpoint | Scenario | ประเภท |
-|-----|----------|----------|--------|
-| `@post` | POST `/api/v1/employees` | สร้าง Employee สำเร็จ → 201 | ✅ Positive |
-| `@post` | POST `/api/v1/employees` | Email format ผิด → 400 + defaultMessage | ❌ Negative |
-| `@get` | GET `/api/v1/employees/{id}` | ค้นหา Employee ที่มีอยู่ → 200 | ✅ Positive |
-| `@get` | GET `/api/v1/employees/{id}` | ค้นหา Employee ที่ไม่มีอยู่ → 404 + message | ❌ Negative |
-
-### Test Accounts (UI)
-
-| Email | Password | หมายเหตุ |
-|-------|----------|---------|
-| `admin@admin.com` | `admin123` | บัญชีที่ใช้งานได้ (Valid) |
-| `wrong@wrong.com` | `wrong123` | บัญชีที่ใช้ไม่ได้ สำหรับ Negative Test |
+| Endpoint                 | Validation |
+| ------------------------ | ---------- |
+| POST /employees          | ✅          |
+| GET /employees/{id}      | ✅          |
+| Status Code Validation   | ✅          |
+| Error Message Validation | ✅          |
 
 ---
 
-## 8. GitHub Actions (CI/CD)
+# 🔄 GitHub Actions CI/CD
 
-Pipeline จะทำงานอัตโนมัติทุกครั้งที่มีการ **Push** หรือ **Pull Request** ไปที่ branch `main`
+Workflow จะทำงานอัตโนมัติเมื่อ:
 
-**ขั้นตอนที่ Pipeline ทำงาน:**
+* push ไปที่ `main`
+* pull request เข้า `main`
 
-| ลำดับ | ขั้นตอน | รายละเอียด |
-|-------|---------|-----------|
-| 1 | Checkout code | ดึงโค้ดล่าสุดจาก GitHub |
-| 2 | Setup Node.js 20 | ติดตั้ง Node.js environment |
-| 3 | `npm ci` | ติดตั้ง dependencies |
-| 4 | Start Docker | เริ่ม API Server สำหรับ API Tests |
-| 5 | `npm test` | รัน Tests ทั้งหมด |
-| 6 | `npm run report` | สร้าง HTML Report |
-| 7 | Upload Artifact | อัปโหลด Report ให้ดาวน์โหลดได้ |
+---
 
-**วิธีดู Report จาก GitHub Actions:**
+# CI Pipeline Steps
 
-1. ไปที่ Tab **Actions** ใน GitHub Repository
-2. คลิกที่ Workflow run ล่าสุด
-3. เลื่อนลงไปที่ส่วน **Artifacts**
-4. คลิก **cucumber-html-report** เพื่อดาวน์โหลด
+| Step                 | Description          |
+| -------------------- | -------------------- |
+| Checkout             | Download source code |
+| Setup Node.js        | Install Node.js 20   |
+| Install Dependencies | npm ci               |
+| Start API Container  | Docker               |
+| Run Tests            | UI + API             |
+| Generate Report      | HTML report          |
+| Upload Artifact      | Store reports        |
 
-![QA Tests](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml/badge.svg)
+---
+
+# 📥 Download Reports From GitHub Actions
+
+1. เปิดแท็บ **Actions**
+2. เลือก workflow ล่าสุด
+3. ไปที่ section **Artifacts**
+4. ดาวน์โหลด report
+
+---
+
+# 🧠 Design Decisions
+
+## Why Separate UI/API Config?
+
+เพื่อ:
+
+* ลด dependency conflict
+* ลด browser startup สำหรับ API tests
+* ทำให้ CI เร็วขึ้น
+* แยก responsibility ชัดเจน
+
+---
+
+## Why Axios For API Testing?
+
+เพราะ:
+
+* lightweight
+* เร็วกว่า browser-based API testing
+* เหมาะกับ integration testing
+* maintain ง่าย
+
+---
+
+## Why Single Worker?
+
+ลด flaky tests บน CI environments
+
+```js
+workers: 1
+```
+
+---
+
+# 👨‍💻 Author
+
+Nutthanan — QA Automation Engineer
+
+---
+
+# 📌 GitHub Actions Status
+
+[![QA Tests](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml/badge.svg)](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml)
