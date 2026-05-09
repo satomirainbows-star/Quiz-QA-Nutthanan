@@ -31,18 +31,27 @@ exports.config = {
   maxInstances: 1,
   maxInstancesPerCapability: 1,
   workers: 1,
-  capabilities: [{
-    maxInstances: 1,
-    browserName: 'chrome',
-    'goog:chromeOptions': {
-      args: [
-        ...(process.argv.includes('--headed') ? [] : ['--headless']),
-        '--no-sandbox',
-        '--disable-dev-shm-usage',
-        '--window-size=1280,800'
-      ]
-    }
-  }],
+ capabilities: [{
+  maxInstances: 1,
+
+  browserName: 'chrome',
+
+  'goog:chromeOptions': {
+
+    args: [
+
+      ...(process.argv.includes('--headed')
+        ? []
+        : ['--headless=new']),
+
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-infobars',
+      '--window-size=1920,1080'
+    ]
+  }
+}],
   logLevel: 'warn',
   bail: 0,
   baseUrl: 'https://qa-practice.razvanvancea.ro',
