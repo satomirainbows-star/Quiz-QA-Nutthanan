@@ -1,40 +1,69 @@
-# Quiz QA — Automation Testing Project
+# QA Automation Testing Framework
 
-โปรเจกต์ทดสอบอัตโนมัติสำหรับ Web UI และ REST API โดยใช้แนวทาง Behavior-Driven Development (BDD) ด้วย Cucumber
+![Node.js](https://img.shields.io/badge/Node.js-20.x-green)
+![WebdriverIO](https://img.shields.io/badge/WebdriverIO-v9-orange)
+![Cucumber](https://img.shields.io/badge/Cucumber-BDD-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue)
+[![CI](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml/badge.svg)](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml)
 
-รองรับทั้ง:
-
-* ✅ UI Automation Testing
-* ✅ API Automation Testing
-* ✅ HTML Reporting
-* ✅ GitHub Actions CI/CD
-* ✅ Docker-based API Integration Testing
+A scalable QA automation framework for Web UI and REST API testing using WebdriverIO, Cucumber, Docker, and GitHub Actions.
 
 ---
 
-# 🚀 Technologies Used
+## Overview
 
-| Layer           | Technology                    |
-| --------------- | ----------------------------- |
-| UI Automation   | WebdriverIO                   |
-| API Automation  | Axios                         |
-| BDD Framework   | Cucumber                      |
-| Assertions      | Node.js Assert                |
-| Reporting       | cucumberjs-json + HTML Report |
-| CI/CD           | GitHub Actions                |
-| API Environment | Docker                        |
-| Runtime         | Node.js                       |
+The framework provides scalable, maintainable, and CI-friendly automation testing for both Web UI and REST API validation, with a strong focus on execution stability and test isolation.
 
 ---
 
-# 🏗 Project Architecture
+## Quick Start
 
-โปรเจกต์นี้ออกแบบให้แยก UI Tests และ API Tests ออกจากกันอย่างชัดเจน เพื่อให้:
+```bash
+git clone https://github.com/satomirainbows-star/Quiz-QA-Nutthanan.git
+cd Quiz-QA-Nutthanan
 
-* ลด flaky tests
-* รันบน CI/CD ได้เสถียร
-* ดูแลรักษาง่าย
-* scale automation ได้ในอนาคต
+npm install
+
+docker run -d --rm \
+  --name qa-practice-api \
+  -p 8887:8081 \
+  rvancea/qa-practice-api:latest
+
+npm test
+```
+
+---
+
+## Features
+
+* Web UI automation with WebdriverIO
+* REST API testing with Axios
+* BDD implementation using Cucumber
+* Dockerized API environment
+* HTML report generation
+* Headless browser execution
+* Automatic failure screenshots
+* CI stability-focused execution design
+* Isolated browser state management
+
+---
+
+## Tech Stack
+
+| Layer            | Technology                    |
+| ---------------- | ----------------------------- |
+| UI Automation    | WebdriverIO                   |
+| API Automation   | Axios                         |
+| BDD Framework    | Cucumber                      |
+| Assertions       | Node.js assert module         |
+| Reporting        | cucumberjs-json + HTML Report |
+| CI/CD            | GitHub Actions                |
+| Containerization | Docker                        |
+| Runtime          | Node.js                       |
+
+---
+
+## Architecture
 
 ```text
 UI Layer
@@ -58,49 +87,110 @@ CI/CD Layer
 
 ---
 
-# ⚙️ CI Stability Improvements
+## Framework Patterns
 
-โปรเจกต์นี้มีการปรับแต่งสำหรับ GitHub Actions และ Linux runner โดยเฉพาะ
-
-### ✔ Chrome Headless Mode
-
-ใช้ Chrome แบบ headless เพื่อลด resource usage และเพิ่มความเร็วในการรัน
-
-### ✔ Dedicated Config Separation
-
-แยก config ระหว่าง:
-
-* `wdio.ui.conf.js`
-* `wdio.api.conf.js`
-
-ช่วยลดปัญหา browser capability conflict
-
-### ✔ Worker Limitation
-
-จำกัดจำนวน workers เพื่อป้องกัน flaky tests บน shared CI runner
-
-```js
-maxInstances: 1
-workers: 1
-```
-
-### ✔ Automatic Screenshot Capture
-
-เมื่อ UI test fail ระบบจะ capture screenshot อัตโนมัติ
-
-```text
-reports/error-<timestamp>.png
-```
-
-### ✔ Dockerized API Testing
-
-API tests ใช้ Docker container เพื่อให้ environment เหมือนกันทุกครั้ง
+* Reusable step definitions
+* Shared support utilities
+* Configuration separation by test type
 
 ---
 
-# 📦 Prerequisites
+## Design Decisions
 
-กรุณาติดตั้งเครื่องมือดังต่อไปนี้ก่อนเริ่มใช้งาน
+### Separate UI and API Configurations
+
+UI and API tests use separate execution configurations:
+
+```text
+wdio.ui.conf.js
+wdio.api.conf.js
+```
+
+Benefits:
+
+* Reduced execution conflicts
+* Faster CI execution
+* Clear separation of responsibilities
+* Reduced browser dependency overhead
+
+---
+
+### Explicit Wait Strategy
+
+Explicit waits are used instead of implicit waits to improve UI test stability.
+
+```js
+waitForDisplayed()
+browser.waitUntil()
+```
+
+This approach helps reduce:
+
+* Timing-related failures
+* Stale element references
+* Flaky test behavior
+
+---
+
+### Controlled Worker Execution
+
+Worker execution is intentionally limited to improve stability on shared CI runners.
+
+```js
+workers: 1
+maxInstances: 1
+```
+
+---
+
+### Browser State Isolation
+
+Browser state is automatically cleaned before and after each scenario:
+
+* localStorage
+* sessionStorage
+* browser cookies
+
+This prevents state leakage between test scenarios.
+
+---
+
+### Dockerized API Environment
+
+API tests run inside a Dockerized environment to ensure consistency across executions.
+
+Benefits:
+
+* Reproducible
+* Isolated
+* Portable
+* CI-friendly
+
+---
+
+## Test Strategy
+
+The framework separates UI and API testing to provide:
+
+* Maintainability
+* Execution speed
+* CI stability
+* Debugging efficiency
+* Test isolation
+
+### Flaky Test Prevention
+
+Several stability-focused practices were implemented:
+
+* Explicit wait strategies
+* Browser state cleanup
+* Controlled worker execution
+* Headless CI optimization
+* Scenario isolation
+
+---
+
+## Prerequisites
 
 | Tool           | Required Version |
 | -------------- | ---------------- |
@@ -111,38 +201,15 @@ API tests ใช้ Docker container เพื่อให้ environment เห
 
 ---
 
-# 🔍 Verify Installation
+## Installation
 
-ตรวจสอบว่า environment พร้อมใช้งาน
-
-```bash
-node -v
-npm -v
-docker -v
-```
-
-ตัวอย่าง:
+### Clone Repository
 
 ```bash
-v20.x.x
-9.x.x
-Docker version xx.x.x
+git clone https://github.com/satomirainbows-star/Quiz-QA-Nutthanan.git
+cd Quiz-QA-Nutthanan
 ```
-
----
-
-# 📥 Installation
-
-## 1. Clone Repository
-
-```bash
-git clone https://github.com/<your-username>/quiz-qa.git
-cd quiz-qa
-```
-
----
-
-## 2. Install Dependencies
+### Install Dependencies
 
 ```bash
 npm install
@@ -150,34 +217,24 @@ npm install
 
 ---
 
-# 🐳 API Server Setup
+## API Server Setup
 
-API tests จำเป็นต้องใช้ Docker container
-
-## Start API Server
+### Start API Server
 
 ```bash
 docker run -d --rm \
---name qa-practice-api \
--p 8887:8081 \
-rvancea/qa-practice-api:latest
+  --name qa-practice-api \
+  -p 8887:8081 \
+  rvancea/qa-practice-api:latest
 ```
 
----
-
-## Verify API Server
-
-เปิด browser ไปที่:
+### Verify API Server
 
 ```text
 http://localhost:8887/swagger-ui.html
 ```
 
-หากเห็น Swagger UI แสดงว่า API พร้อมใช้งาน
-
----
-
-## Stop API Server
+### Stop API Server
 
 ```bash
 docker stop qa-practice-api
@@ -185,108 +242,64 @@ docker stop qa-practice-api
 
 ---
 
-# ▶ Running Tests
+## Running Tests
 
-# Run All Tests
+### Run All Tests
 
 ```bash
 npm test
 ```
 
-รันทั้ง:
-
-* UI Tests
-* API Tests
-
----
-
-# Run UI Tests Only
+### Run UI Tests
 
 ```bash
 npm run test:ui
 ```
 
-ใช้ Chrome Headless mode โดยอัตโนมัติ
-
----
-
-# Run UI Tests (Headed Mode)
-
-สำหรับ debug หรือ demo
+### Run UI Tests (Headed Mode)
 
 ```bash
 npm run test:ui:headed
 ```
 
-หรือ
+or
 
 ```bash
 npx wdio run wdio.ui.conf.js --headed
 ```
 
----
-
-# Run API Tests Only
+### Run API Tests
 
 ```bash
 npm run test:api
 ```
 
-> ต้อง start Docker API server ก่อน
-
 ---
 
-# 🎯 Run By Tags
-
-รองรับการรันแบบ selective execution
-
-## Run Login Tests
+## Run Tests by Tags
 
 ```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step1"
-```
+# Login Tests
+npx wdio run wdio.ui.conf.js --cucumberOpts.tags="@step1"
 
-## Run Cart Tests
+# Product Tests
+npx wdio run wdio.ui.conf.js --cucumberOpts.tags="@step2"
 
-```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step2"
-```
+# Shipping Tests
+npx wdio run wdio.ui.conf.js --cucumberOpts.tags="@step3"
 
-## Run Shipping Tests
+# Address Validation Tests
+npx wdio run wdio.ui.conf.js --cucumberOpts.tags="@step4"
 
-```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step3"
-```
-
-## Run Validation Tests
-
-```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@step4"
-```
-
-## Run Positive Tests
-
-```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@positive"
-```
-
-## Run Negative Tests
-
-```bash
-npx wdio run wdio.ui.conf.js --cucumberOpts.tagExpression="@negative"
-```
-
-## Run API Tests By Tag
-
-```bash
-npx wdio run wdio.api.conf.js --cucumberOpts.tagExpression="@api"
+# API Tests
+npx wdio run wdio.api.conf.js --cucumberOpts.tags="@api"
 ```
 
 ---
 
-# 📊 HTML Reporting
+## Reporting
 
-หลังจากรัน tests เสร็จ:
+Generate the HTML report:
 
 ```bash
 npm run report
@@ -294,62 +307,19 @@ npm run report
 
 ---
 
-# 📁 Report Structure
-
-ระบบจะสร้าง report แยกตาม:
-
-* วันที่
-* รอบการรัน
-
-ตัวอย่าง:
+## Project Structure
 
 ```text
-reports/
-├── 2026-05-09_run-01/
-├── 2026-05-09_run-01_report/
-│   └── index.html
-├── 2026-05-09_run-02/
-└── ...
-```
-
----
-
-# 🖼 Failure Screenshots
-
-เมื่อ UI tests fail:
-
-```text
-reports/error-<timestamp>.png
-```
-
-จะถูกสร้างอัตโนมัติ
-
----
-
-# 📂 Project Structure
-
-```text
-quiz-qa/
+Quiz-QA-Nutthanan/
 ├── .github/
 │   └── workflows/
 │       └── qa-tests.yml
-│
 ├── features/
 │   ├── ui/
-│   │   └── shop.feature
 │   └── api/
-│       └── employees.feature
-│
 ├── step-definitions/
-│   ├── ui.steps.js
-│   └── api.steps.js
-│
 ├── support/
-│   ├── hooks.js
-│   └── selectors.js
-│
 ├── reports/
-│
 ├── generate-report.js
 ├── wdio.ui.conf.js
 ├── wdio.api.conf.js
@@ -359,15 +329,9 @@ quiz-qa/
 
 ---
 
-# 🧪 Test Coverage
+## Test Scope
 
-# UI Test Coverage
-
-เว็บไซต์:
-
-```text
-https://qa-practice.razvanvancea.ro/auth_ecommerce.html
-```
+### UI Test Coverage
 
 | Area                  | Coverage |
 | --------------------- | -------- |
@@ -378,15 +342,7 @@ https://qa-practice.razvanvancea.ro/auth_ecommerce.html
 | Shipping Validation   | ✅        |
 | Address Validation    | ✅        |
 
----
-
-# API Test Coverage
-
-API:
-
-```text
-http://localhost:8887/swagger-ui.html
-```
+### API Validation Coverage
 
 | Endpoint                 | Validation |
 | ------------------------ | ---------- |
@@ -397,16 +353,14 @@ http://localhost:8887/swagger-ui.html
 
 ---
 
-# 🔄 GitHub Actions CI/CD
+## GitHub Actions CI/CD
 
-Workflow จะทำงานอัตโนมัติเมื่อ:
+The workflow automatically runs on:
 
-* push ไปที่ `main`
-* pull request เข้า `main`
+* Push to `main`
+* Pull requests targeting `main`
 
----
-
-# CI Pipeline Steps
+### CI Pipeline
 
 | Step                 | Description          |
 | -------------------- | -------------------- |
@@ -420,55 +374,12 @@ Workflow จะทำงานอัตโนมัติเมื่อ:
 
 ---
 
-# 📥 Download Reports From GitHub Actions
+## Future Improvements
 
-1. เปิดแท็บ **Actions**
-2. เลือก workflow ล่าสุด
-3. ไปที่ section **Artifacts**
-4. ดาวน์โหลด report
-
----
-
-# 🧠 Design Decisions
-
-## Why Separate UI/API Config?
-
-เพื่อ:
-
-* ลด dependency conflict
-* ลด browser startup สำหรับ API tests
-* ทำให้ CI เร็วขึ้น
-* แยก responsibility ชัดเจน
+* Retry strategy optimization for flaky environments
+* Test data management strategy
+* Allure reporting integration
+* API contract/schema validation
 
 ---
 
-## Why Axios For API Testing?
-
-เพราะ:
-
-* lightweight
-* เร็วกว่า browser-based API testing
-* เหมาะกับ integration testing
-* maintain ง่าย
-
----
-
-## Why Single Worker?
-
-ลด flaky tests บน CI environments
-
-```js
-workers: 1
-```
-
----
-
-# 👨‍💻 Author
-
-Nutthanan — QA Automation Engineer
-
----
-
-# 📌 GitHub Actions Status
-
-[![QA Tests](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml/badge.svg)](https://github.com/satomirainbows-star/Quiz-QA-Nutthanan/actions/workflows/qa-tests.yml)
