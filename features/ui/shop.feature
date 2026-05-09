@@ -59,15 +59,16 @@ Feature: ทดสอบระบบ E-Commerce Shop (UI)
     And I submit the order without filling required fields
     Then the order submission should be prevented
 
-  # ════════════════════════════════════════════════════════
-  #  STEP 4 — ตรวจสอบรูปแบบที่อยู่จัดส่ง
+  # ════════════════════════════════════════════════════════ 
+  #  STEP 4 — ตรวจสอบข้อความยืนยันคำสั่งซื้อ
   # ════════════════════════════════════════════════════════
 
-  @step4 @positive
-  Scenario: [Step 4 - Positive] ที่อยู่จัดส่งแสดงในรูปแบบ "Street, City - Country" ถูกต้อง
-    When I login with username "admin@admin.com" and password "admin123"
-    And I add 2 units of "Dior J'adore"
-    And I click Proceed to Checkout
-    And I fill in all required shipping fields
-    And I submit the order successfully
-    Then the displayed address should match "Street, City - Country" format
+@step4 @positive
+Scenario: [Step 4 - Positive] ตรวจสอบ Validation ของข้อความยืนยันคำสั่งซื้อและที่อยู่จัดส่ง
+  When I login with username "admin@admin.com" and password "admin123"
+  And I add 2 units of "Dior J'adore"
+  And I click Proceed to Checkout
+  And I fill in all required shipping fields
+  And I submit the order successfully
+  Then the order confirmation message should be displayed correctly
+  And the displayed address should match "Street, City - Country" format

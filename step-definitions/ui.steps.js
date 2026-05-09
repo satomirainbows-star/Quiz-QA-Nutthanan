@@ -237,23 +237,59 @@ Then('the order submission should be prevented', async () => {
   expect(await $(sel.shippingSection)).toBeDisplayed();
 });
 
-// ─── Step 4: Address Validation ───────────────────────────────────────────────
+// ─── Step 4: Order Confirmation Validation ────────────────────────────────
 
 When('I submit the order successfully', async () => {
   await $(sel.submitOrderBtn).click();
+
   const msg = await $(sel.messageBox);
   await msg.waitForDisplayed({ timeout: 10000 });
-  const text = await msg.getText();
-  expect(text).toContain('Congrats');
 });
+Then(
+  'the order confirmation message should be displayed correctly',
+  async () => {
 
-Then('the displayed address should match {string} format', async (_format) => {
-  const s = global.scenarioContext.shipping || SHIPPING;
-  const expected = `${s.street}, ${s.city} - ${s.country}`;
+    const s = global.scenarioContext.shipping || SHIPPING;
 
-  const msg = await $(sel.messageBox);
-  await msg.waitForDisplayed({ timeout: 5000 });
-  const text = await msg.getText();
+    const msg = await $(sel.messageBox);
 
-  expect(text).toContain(expected);
-});
+    await msg.waitForDisplayed({ timeout: 5000 });
+
+    const text = await msg.getText();
+
+    // Validate generic confirmation message
+    expect(text).toContain('Congrats!');
+    expect(text).toContain('has been registered');
+    expect(text).toContain('will be shipped to');
+
+    // Validate shipping address
+    const expectedAddress =
+      `${s.street}, ${s.city} - ${s.country}`;
+
+    expect(text).toContain(expectedAddress);
+  }
+);
+
+Then(
+  'the displayed address should match {string} format',
+  async (_format) => {
+
+    const msg = await $(sel.messageBox);
+
+    await msg.waitForDisplayed({ timeout: 5000 });
+
+    const text = await msg.getText();
+
+    // Extract address from message
+    const extractedAddress = text
+      .split('will be shipped to ')[1]
+      .replace('.', '')
+      .trim();
+
+    // Validate format:
+    // Street, City - Country
+    const addressPattern = /^.+,\s.+\s-\s.+$/;
+
+    expect(extractedAddress).toMatch(addressPattern);
+  }
+);
