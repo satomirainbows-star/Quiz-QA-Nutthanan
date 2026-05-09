@@ -360,6 +360,17 @@ The workflow automatically runs on:
 * Push to `main`
 * Pull requests targeting `main`
 
+### CI/CD Pipeline
+
+This project uses GitHub Actions to:
+
+- Install dependencies
+- Start Docker API server
+- Run UI automation tests
+- Run API automation tests
+- Generate HTML reports
+- Upload test artifacts
+
 ### CI Pipeline
 
 | Step                 | Description          |
