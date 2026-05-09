@@ -8,7 +8,9 @@ on:
     branches: [main]
 
 jobs:
-  test:
+
+  ui-tests:
+    name: UI Tests
     runs-on: ubuntu-latest
 
     timeout-minutes: 20
@@ -29,6 +31,39 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Run UI Tests
+        run: npm run test:ui
+
+      - name: Generate UI Report
+        if: always()
+        run: npm run report
+
+      - name: Upload UI Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-report
+          path: reports/
+
+  api-tests:
+    name: API Tests
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
       - name: Start API Server
         run: |
           docker run -d --rm \
@@ -38,21 +73,21 @@ jobs:
 
       - name: Wait for API Server
         run: |
-          echo "Waiting for API to start..."
+          echo "Waiting for API..."
           sleep 15
 
-      - name: Run UI and API Tests
-        run: npm test
+      - name: Run API Tests
+        run: npm run test:api
 
-      - name: Generate HTML Report
+      - name: Generate API Report
         if: always()
         run: npm run report
 
-      - name: Upload HTML Report
+      - name: Upload API Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cucumber-html-report
+          name: api-test-report
           path: reports/
 
       - name: Stop API Server
