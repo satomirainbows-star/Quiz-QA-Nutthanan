@@ -28,7 +28,7 @@ Feature: ทดสอบระบบ Employee API (Backend)
     When I send a GET request to "/employees/{id}" with the existing id
     Then the response status code should be 200
 
-  @get @negative
+  @get @negative @smoke
   Scenario: [GET - Negative] ค้นหาพนักงานที่ไม่มีในระบบ ต้องตอบกลับ 404 พร้อมข้อความแจ้งเตือน
     When I send a GET request to "/employees/99999"
     Then the response status code should be 404
