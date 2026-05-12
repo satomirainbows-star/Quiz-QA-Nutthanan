@@ -59,8 +59,8 @@ Feature: ทดสอบระบบ E-Commerce Shop (UI)
     And I submit the order without filling required fields
     Then the order submission should be prevented
 
-  # ════════════════════════════════════════════════════════ 
-  #  STEP 4 — ตรวจสอบข้อความยืนยันคำสั่งซื้อ
+  # ════════════════════════════════════════════════════════
+  #  STEP 4 — ตรวจสอบข้อความยืนยันคำสั่งซื้อและที่อยู่จัดส่ง
   # ════════════════════════════════════════════════════════
 
 @step4 @positive
